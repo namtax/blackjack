@@ -60,7 +60,7 @@ describe Dealer do
           expect(Card).to receive(:new).at_least(:once).and_return(third_card)
         end
 
-        it 'adds another card to dealers hand ' do 
+        it 'adds another card to dealers hand' do 
           dealer.handle_request('stand')
           expect(dealer.dealers_hand.size).to eq(4)
           expect(dealer.dealers_total >= 17).to be_truthy
@@ -81,6 +81,20 @@ describe Dealer do
           dealer.handle_request('stand')
           expect(dealer.dealers_hand.size).to eq(3)
           expect(dealer.dealers_total >= 17).to be_truthy
+        end
+      end
+
+      context 'dealers hand is > 21' do 
+        let(:first_card)  { Card.new(10, 'hearts') }
+        let(:second_card) { Card.new(10, 'hearts') }
+
+        before do 
+          dealer.deal_hand(first_card, second_card )
+        end
+
+        it 'marks player as winner' do 
+          outcome = dealer.handle_request('stand')
+          expect(outcome).to eq('Player Wins!')
         end
       end
     end

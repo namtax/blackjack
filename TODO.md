@@ -1,0 +1,2 @@
+- you cant have the same card twice
+- dealer can only handle request once he has dealt cards

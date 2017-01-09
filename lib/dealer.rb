@@ -1,6 +1,8 @@
 class Dealer 
   attr_reader :card, :dealers_hand, :suit, :hand, :players_hand
 
+  MAX_SUM = 21
+
   def deal_hand(first_card = nil, second_card = nil)
     @first_card   = first_card  || Card.new
     @second_card  = second_card || Card.new
@@ -30,14 +32,22 @@ class Dealer
   def hit_player
     players_hand << Card.new
 
-    if players_total > 21 
+    if players_total > MAX_SUM
       'Dealer Wins!'
     end 
   end
 
   def hit_dealer
-    while dealers_total < 17
+    if dealers_total < 17
+      while dealers_total < 17
+        dealers_hand << Card.new
+      end
+    else
       dealers_hand << Card.new
     end
+
+    if dealers_total > MAX_SUM
+      'Player Wins!'
+    end 
   end
 end
