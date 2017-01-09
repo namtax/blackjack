@@ -11,7 +11,33 @@ class Dealer
 
   def handle_request(input)
     if input == 'hit'
-      players_hand << Card.new
+      hit_player
+    elsif input == 'stand'
+      hit_dealer
+    end
+  end
+
+  def players_total
+   players_hand.map(&:number).inject(:+)
+  end
+
+  def dealers_total
+   dealers_hand.map(&:number).inject(:+)
+  end
+
+  private
+
+  def hit_player
+    players_hand << Card.new
+
+    if players_total > 21 
+      'Dealer Wins!'
     end 
+  end
+
+  def hit_dealer
+    while dealers_total < 17
+      dealers_hand << Card.new
+    end
   end
 end
