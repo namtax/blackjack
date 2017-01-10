@@ -41,8 +41,16 @@ describe Dealer do
 
   describe 'handle_request' do 
     context 'player calls hit' do 
+      let(:first_card)  { Card.new(14, 'hearts') }
+      let(:second_card) { Card.new(5, 'hearts') }
+
       context 'player hand remains < 21' do 
-        before { dealer.deal_hand }
+        let(:third_card)  { Card.new(2, 'hearts') }
+
+        before do 
+          dealer.deal_hand(first_card, second_card) 
+          expect(Card).to receive(:new).and_return(third_card)
+        end
 
         it 'adds another card to players hand' do 
           dealer.handle_request('hit')
@@ -54,11 +62,13 @@ describe Dealer do
           dealer.handle_request('hit')
           expect(dealer.dealers_hand.size).to eq(2)
         end
+
+        it 'does not mark dealer as winner' do 
+          expect(dealer.handle_request('hit')).to_not eq('Dealer Wins!')
+        end
       end
 
       context 'player hand > 21' do 
-        let(:first_card)  { Card.new(14, 'hearts') }
-        let(:second_card) { Card.new(5, 'hearts') }
         let(:third_card)  { Card.new(5, 'hearts') }
         let(:outcome)     { dealer.handle_request('hit') }
 
@@ -121,6 +131,12 @@ describe Dealer do
         it 'marks player as winner' do 
           outcome = dealer.handle_request('stand')
           expect(outcome).to eq('Player Wins!')
+        end
+      end
+
+      context 'initial hand has not been dealt yet' do 
+        it 'instructs user to deal initial cards' do 
+          expect(dealer.handle_request('hit')).to eq('Please deal initial hand')
         end
       end
     end

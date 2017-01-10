@@ -1,29 +1,14 @@
 class Dealer 
-  attr_reader :card, :dealers_hand, :suit, :hand, :players_hand
+  attr_reader :card, :dealers_hand, :initial_hand, :suit, :hand, :players_hand
 
   MAX_SUM = 21
 
-  def initialize
-    @inital_hand  = []
-    @dealers_hand = []
-    @players_hand = []
-  end
-
-  def deal_hand(first_card = nil, second_card = nil)
-    @first_card    = first_card  || Card.new
-    @second_card   = second_card || Card.new
-    @hand          = [@first_card, @second_card]
-    @initial_hand  = [@first_card, @second_card]
-    @dealers_hand  = [@first_card, @second_card]
-    @players_hand  = [@first_card, @second_card]
-
+  def deal_hand(first_card = Card.new, second_card = Card.new)
+    set_initial_hand(first_card, second_card)
+   
     if total >= 20
       while total >= 20
-        @first_card   = Card.new
-        @second_card  = Card.new
-        @hand         = [@first_card, @second_card]
-        @dealers_hand = [@first_card, @second_card]
-        @players_hand = [@first_card, @second_card]
+        set_initial_hand(Card.new, Card.new)
       end
     end
   end
@@ -46,11 +31,19 @@ class Dealer
 
   private
 
+  def set_initial_hand(first_card, second_card)
+    @initial_hand  = [first_card, second_card]
+    @dealers_hand  = [first_card, second_card]
+    @players_hand  = [first_card, second_card]
+  end
+
   def total
-    hand.map(&:number).inject(:+)
+    initial_hand.map(&:number).inject(:+)
   end
 
   def hit_player
+    return 'Please deal initial hand' unless players_hand
+
     players_hand << Card.new
 
     if players_total > MAX_SUM
