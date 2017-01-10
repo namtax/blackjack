@@ -1,5 +1,3 @@
-require 'card_player'
-
 class Player 
   include CardPlayer
   attr_reader :hand
@@ -7,7 +5,7 @@ class Player
   MAX_SUM = 21
 
   def set_hand(hand)
-    @hand = hand
+    @hand = hand.dup
   end
 
   def hit
