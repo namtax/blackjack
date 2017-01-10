@@ -3,22 +3,28 @@ class Dealer
 
   MAX_SUM = 21
 
+  def initialize
+    @inital_hand  = []
+    @dealers_hand = []
+    @players_hand = []
+  end
+
   def deal_hand(first_card = nil, second_card = nil)
-    @first_card   = first_card  || Card.new
-    @second_card  = second_card || Card.new
-    @hand         = [@first_card, @second_card]
-    @players_hand = @hand.dup
-    @dealers_hand = @hand.dup
+    @first_card    = first_card  || Card.new
+    @second_card   = second_card || Card.new
+    @hand          = [@first_card, @second_card]
+    @initial_hand  = [@first_card, @second_card]
+    @dealers_hand  = [@first_card, @second_card]
+    @players_hand  = [@first_card, @second_card]
 
-    if dealers_total >= 20
-      while dealers_total >= 20
-        @hand         = [Card.new, Card.new]
-        @players_hand = @hand.dup
-        @dealers_hand = @hand.dup
+    if total >= 20
+      while total >= 20
+        @first_card   = Card.new
+        @second_card  = Card.new
+        @hand         = [@first_card, @second_card]
+        @dealers_hand = [@first_card, @second_card]
+        @players_hand = [@first_card, @second_card]
       end
-
-      @players_hand = @hand.dup
-      @dealers_hand = @hand.dup
     end
   end
 
@@ -39,6 +45,10 @@ class Dealer
   end
 
   private
+
+  def total
+    hand.map(&:number).inject(:+)
+  end
 
   def hit_player
     players_hand << Card.new

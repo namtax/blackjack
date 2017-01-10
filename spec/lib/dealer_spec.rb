@@ -40,31 +40,34 @@ describe Dealer do
   end
 
   describe 'handle_request' do 
-    before { dealer.deal_hand }
-
     context 'player calls hit' do 
-      it 'adds another card to players hand' do 
-        dealer.handle_request('hit')
-        expect(dealer.players_hand.size).to eq(3)
-        expect(dealer.players_hand).to all( be_an(Card) )
+      context 'player hand remains < 21' do 
+        before { dealer.deal_hand }
+
+        it 'adds another card to players hand' do 
+          dealer.handle_request('hit')
+          expect(dealer.players_hand.size).to eq(3)
+          expect(dealer.players_hand).to all( be_an(Card) )
+        end
+
+        it 'does not add another card to dealers hand' do 
+          dealer.handle_request('hit')
+          expect(dealer.dealers_hand.size).to eq(2)
+        end
       end
 
-      it 'does not add another card to dealers hand' do 
-        dealer.handle_request('hit')
-        expect(dealer.dealers_hand.size).to eq(2)
-      end
-
-      context 'player goes > 21' do 
+      context 'player hand > 21' do 
         let(:first_card)  { Card.new(14, 'hearts') }
-        let(:second_card) { Card.new(6, 'hearts') }
-        let(:outcome)     { dealer.handle_request('stand') }
+        let(:second_card) { Card.new(5, 'hearts') }
+        let(:third_card)  { Card.new(5, 'hearts') }
+        let(:outcome)     { dealer.handle_request('hit') }
 
         before do 
           dealer.deal_hand(first_card, second_card) 
+          expect(Card).to receive(:new).and_return(third_card)
         end
 
         it 'marks dealer as winner' do 
-          outcome = dealer.handle_request('hit')
           expect(outcome).to eq('Dealer Wins!')
         end
       end
@@ -106,11 +109,13 @@ describe Dealer do
       end
 
       context 'dealers hand is > 21' do 
-        let(:first_card)  { Card.new(10, 'hearts') }
-        let(:second_card) { Card.new(10, 'hearts') }
+        let!(:first_card)          { Card.new(8, 'hearts') }
+        let!(:second_card)         { Card.new(10, 'hearts') }
+        let!(:dealers_first_hit)   { Card.new(10, 'hearts') }
 
         before do 
           dealer.deal_hand(first_card, second_card )
+          allow(Card).to receive(:new).and_return(dealers_first_hit)
         end
 
         it 'marks player as winner' do 
