@@ -2,6 +2,7 @@ class Game
   attr_reader :response
 
   MAX_FIRST_HAND = 20
+  VALID_COMMANDS = %|hit stand|
 
   def initialize(dealer = Dealer.new, player = Player.new)
     @dealer   = dealer
@@ -26,6 +27,7 @@ class Game
   def player_requests(request)
     return 'Please Start Game' unless dealer.hand
     response.clear
+    return response << 'Please select hit or stand' unless VALID_COMMANDS.include?(request)
 
     if request == 'hit'
       hit_player

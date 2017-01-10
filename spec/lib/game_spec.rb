@@ -144,6 +144,13 @@ describe Game do
       end
     end
 
+    context 'invalid command' do 
+      it 'notifies users' do 
+        subject.start
+        expect(subject.player_requests('false')).to eq(['Please select hit or stand'])
+      end
+    end
+
     describe '#over?' do 
       context 'player lost' do 
         before do 

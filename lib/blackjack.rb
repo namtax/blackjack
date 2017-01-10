@@ -11,7 +11,7 @@ class Blackjack
 
     puts game.response
      
-    while open
+    while game_on
       input  = gets.chomp
       game.player_requests(input)
 
@@ -23,7 +23,7 @@ class Blackjack
     end
   end
 
-  def open
+  def game_on
     @end.nil?
   end
 
