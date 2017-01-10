@@ -9,6 +9,17 @@ class Dealer
     @hand         = [@first_card, @second_card]
     @players_hand = @hand.dup
     @dealers_hand = @hand.dup
+
+    if dealers_total >= 20
+      while dealers_total >= 20
+        @hand         = [Card.new, Card.new]
+        @players_hand = @hand.dup
+        @dealers_hand = @hand.dup
+      end
+
+      @players_hand = @hand.dup
+      @dealers_hand = @hand.dup
+    end
   end
 
   def handle_request(input)

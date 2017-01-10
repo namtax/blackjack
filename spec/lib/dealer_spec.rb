@@ -5,16 +5,37 @@ describe Dealer do
   let(:cards)  { dealer.cards }
 
   describe '#deal_hand' do 
-    before { dealer.deal_hand }
+    context 'when sum of 2 cards value > 20' do 
+      before { dealer.deal_hand }
 
-    it 'adds two cards to dealers hand' do 
-      expect(dealer.dealers_hand.size).to eq(2)
-      expect(dealer.dealers_hand).to all( be_an(Card) )
+      it 'adds two cards to dealers hand' do 
+        expect(dealer.dealers_hand.size).to eq(2)
+        expect(dealer.dealers_hand).to all( be_an(Card) )
+      end
+
+      it 'adds two cards to players hand' do 
+        expect(dealer.dealers_hand.size).to eq(2)
+        expect(dealer.dealers_hand).to all( be_an(Card) )
+      end
     end
 
-    it 'adds two cards to players hand' do 
-      expect(dealer.dealers_hand.size).to eq(2)
-      expect(dealer.dealers_hand).to all( be_an(Card) )
+    context 'when sum of 2 cards value >=20' do 
+      let!(:first_card)          { Card.new(14, 'hearts') }
+      let!(:second_card)         { Card.new(6,  'hearts') }
+      let!(:first_redealt_card)  { Card.new(15, 'hearts') }
+      let!(:second_redealt_card) { Card.new(5,  'hearts') }
+      let!(:third_redealt_card)  { Card.new(11, 'hearts') }
+      let!(:fourth_redealt_card) { Card.new(8,  'hearts') }
+
+      before do 
+        expect(Card).to receive(:new)
+          .and_return(first_redealt_card, second_redealt_card, third_redealt_card, fourth_redealt_card)
+        dealer.deal_hand(first_card, second_card) 
+      end
+
+      it 'redeals the cards until cards value > 20' do 
+        expect(dealer.dealers_hand).to match_array([third_redealt_card, fourth_redealt_card])
+      end
     end
   end
 
