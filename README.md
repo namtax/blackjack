@@ -1,7 +1,5 @@
 # Blackjack
 
-Want to become a maths genuis? Use this app to quickly print the times table from anywhere at anytime.
-
 ### Installation
 
 ```
@@ -17,11 +15,6 @@ bundle
 ```
 bin/blackjack
 ```
-
-If you get stick at any point - just hit.
-
-```
-bin/funding --help
-```
+Then either type `hit` or `stand` to play the game.
 
 Have fun!!
